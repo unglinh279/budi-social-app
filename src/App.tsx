@@ -41,7 +41,7 @@ const REMOVE_FRIEND = gql`
 
 const SocialApp: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<any>(null);
-  const [friends, setFriends] = useState<any[]>([]);
+  // const [friends, setFriends] = useState<any[]>([]);
 
   const { loading: usersLoading, error: usersError, data: usersData } = useQuery(GET_USERS);
   const { loading: friendsLoading, error: friendsError, data: friendsData, refetch: refetchFriends } = useQuery(GET_FRIENDS, {
@@ -65,7 +65,7 @@ const SocialApp: React.FC = () => {
   const handleUserChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const user = usersData.getUsers.find((u: any) => u.userId === event.target.value);
     setSelectedUser(user);
-    setFriends([]);
+    // setFriends([]);
   };
 
   const getFriendName = (friendId: string) => {
