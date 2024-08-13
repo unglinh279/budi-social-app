@@ -112,12 +112,12 @@ const SocialApp: React.FC = () => {
   );
 
   return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto', textAlign: 'center' }}>
+    <div className="social-app-container">
       <h1>Social App</h1>
 
       {/* Select User Section */}
-      <div style={{ marginBottom: '20px' }}>
-        <label htmlFor="user-select">Select User:</label>
+      <div className="user-select-container">
+        <label htmlFor="user-select">Select User: </label>
         <select id="user-select" onChange={handleUserChange} value={selectedUser?.userId || ''}>
           <option value="" disabled>Select a user</option>
           {usersData.getUsers.map((user: any) => (
@@ -129,20 +129,20 @@ const SocialApp: React.FC = () => {
       {selectedUser && (
         <>
           {/* User Profile Section */}
-          <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+          <div className="user-profile">
             <h2>{selectedUser.name}</h2>
             <p>Email: {selectedUser.email}</p>
           </div>
 
           {/* Friends List Section */}
-          <div>
+          <div className="friends-list">
             <h2>Friends List</h2>
             {friendsLoading ? (
               <p>Loading friends...</p>
             ) : friendsError ? (
               <p>Error loading friends: {friendsError.message}</p>
             ) : (
-              <ul style={{ listStyleType: 'none', padding: 0 }}>
+              <ul>
                 {friendsData?.getFriends?.map((friend: any) => (
                   <li key={friend.friendId}>
                     {getFriendName(friend.friendId)} <button onClick={() => removeFriend(friend)}>Remove</button>
@@ -153,9 +153,9 @@ const SocialApp: React.FC = () => {
           </div>
 
           {/* Recommended Friends Section */}
-          <div>
+          <div className="recommended-friends">
             <h2>Recommended Friends</h2>
-            <ul style={{ listStyleType: 'none', padding: 0 }}>
+            <ul>
               {recommendedFriends.map((friend: any) => (
                 <li key={friend.userId}>
                   {friend.name} <button onClick={() => addFriend(friend)}>Add</button>
