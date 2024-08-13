@@ -41,6 +41,8 @@ const REMOVE_FRIEND = gql`
 
 const SocialApp: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [addingFriendId, setAddingFriendId] = useState<string | null>(null);
+  const [removingFriendId, setRemovingFriendId] = useState<string | null>(null);
   // const [friends, setFriends] = useState<any[]>([]);
 
   const { loading: usersLoading, error: usersError, data: usersData } = useQuery(GET_USERS);
@@ -74,6 +76,7 @@ const SocialApp: React.FC = () => {
   };
 
   const addFriend = async (friend: any) => {
+    setAddingFriendId(friend.userId);
     try {
       if (selectedUser.userId === friend.userId) {
         console.error("Cannot add yourself as a friend.");
@@ -89,10 +92,13 @@ const SocialApp: React.FC = () => {
       refetchFriends();
     } catch (error) {
       console.error('Error adding friend:', error);
+    } finally {
+      setAddingFriendId(null);
     }
   };
 
   const removeFriend = async (friend: any) => {
+    setRemovingFriendId(friend.friendId);
     try {
       await removeFriendMutation({
         variables: {
@@ -103,6 +109,8 @@ const SocialApp: React.FC = () => {
       refetchFriends();
     } catch (error) {
       console.error('Error removing friend:', error);
+    } finally {
+      setRemovingFriendId(null);
     }
   };
 
@@ -145,8 +153,14 @@ const SocialApp: React.FC = () => {
               <ul>
                 {friendsData?.getFriends?.map((friend: any) => (
                   <li key={friend.friendId}>
-                    {getFriendName(friend.friendId)} <button onClick={() => removeFriend(friend)}>Remove</button>
-                  </li>
+                  {getFriendName(friend.friendId)}{" "}
+                  <button
+                    onClick={() => removeFriend(friend)}
+                    disabled={removingFriendId === friend.friendId}
+                  >
+                    {removingFriendId === friend.friendId ? "Removing..." : "Remove"}
+                  </button>
+                </li>
                 ))}
               </ul>
             )}
@@ -158,8 +172,14 @@ const SocialApp: React.FC = () => {
             <ul>
               {recommendedFriends.map((friend: any) => (
                 <li key={friend.userId}>
-                  {friend.name} <button onClick={() => addFriend(friend)}>Add</button>
-                </li>
+                {friend.name}{" "}
+                <button
+                  onClick={() => addFriend(friend)}
+                  disabled={addingFriendId === friend.userId}
+                >
+                  {addingFriendId === friend.userId ? "Adding..." : "Add"}
+                </button>
+              </li>
               ))}
             </ul>
           </div>
